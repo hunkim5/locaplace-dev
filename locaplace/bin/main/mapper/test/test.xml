@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.locaplace.api.test.mapper.TestMapper">
+	<select id='selectTestList2' resultType="com.locaplace.api.test.dto.TestSelectDto">
+		select a.*
+		 ,date_format(create_dtm, '%Y-%m-%d') create_dt
+		from test a
+	</select>
+    <select id='selectTestList' resultType="com.locaplace.api.test.dto.TestDto">
+    	select a.*
+    		,DATE_FORMAT(create_dtm, '%Y-%m-%d') create_dt
+    	from test a
+		<where>
+             <if test='str != null'>
+                 AND str like CONCAT('%',#{str},'%')
+             </if>
+             <if test='strSearch != null and strSearch.size != 0'>
+             	AND str IN
+	             <foreach collection="strSearch" item="item" open="(" close=")" separator=",">
+	             	#{item}
+	             </foreach>
+             </if>
+         </where>
+         <trim prefix='ORDER BY' suffixOverrides=",">
+         	<if test='createDtmYn == "Y"'>
+        	 create_dtm DESC,
+        	</if>
+        	<if test='createDtmYn == "Y"'>
+        	 str DESC,
+        	</if>
+        </trim>
+ 	</select>
+    <select id='selectTest' resultType="com.locaplace.api.test.dto.TestDto">
+    	select * from test
+		<where>
+			id=#{id}
+			and str=#{str}
+        </where>
+ 	</select>
+ 	<insert id="insertTest">
+ 		insert into test(str,del_yn,point_num)values(#{str},#{delYn},#{pointNum})
+ 		<selectKey resultType="int" keyProperty="id" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+ 	</insert>
+ 	<update id="updateTest">
+ 		update test set
+ 		num = #{num}
+ 		where str=#{str}
+ 	</update>
+ 	<delete id="deleteTest">
+ 		delete from test where id=#{id}
+ 	</delete>
+ 	<insert id="insertSubwayStation">
+ 		insert into common_code(classification_code,code,code_name,etc_val1)
+ 		values('subway_station','${stationCd}','${stationNm}','${lineNum}')
+ 	</insert>
+</mapper>

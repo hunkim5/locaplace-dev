@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/locaplace
+    username: locaplace
+    password: Locadev123!
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: locaplacedev@gmail.com
+    password: eisd xfwm zjlx pryy
+    properties:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+locaplace:
+  endpoint: http://192.168.109.239:8080
+
+jwt:
+  secret: 7f8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9v0w1x2y3z4a5b6c7d8e9f0

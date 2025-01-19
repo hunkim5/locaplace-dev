@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.locaplace.api.host.product.mapper.ProductMapper">
+	<select id="selectGuestProductList" resultType="com.locaplace.api.host.product.dto.ProductDto">
+    	select
+    		 product_nid
+			,host_nid
+			,product_name
+			,use_amount
+			,deposit
+			,product_comment
+			,how_to_use
+			,latitude
+			,longitude
+			,sido
+			,sigungu
+			,address
+			,address_detail
+			,near_train
+			,max_guest_number
+			,product_status
+			,exclusive_area
+			,exclusive_area_unit
+			,number_floors
+			,floor_type
+			,parking_yn
+			,elevator_yn
+			,animals_yn
+			,room_qty
+			,washroom_qty
+			,living_room_qty
+			,kitchen_qty
+			,room_type
+			,multiple_layer
+			,living_room_type
+			,kitchen_type
+			,washroom_type
+			,img_file_nid
+			,wanted_guest_level
+			,create_dtm
+			,update_dtm
+    	from product
+    	<where>
+    		<if test='nearTrain != null and nearTrain.size != 0'>
+    			AND near_train IN
+	            <foreach collection="nearTrain" item="item" open="(" close=")" separator=",">
+	                 #{item}
+	            </foreach>
+            </if>
+            <if test='animalsYn == "Y"'>
+                AND animals_yn = 'Y'
+            </if>
+            <if test='commonRoomYn == "Y"'>
+                AND room_type = 'COMMON'
+            </if>
+            <if test='parkingYn == "Y"'>
+                AND parking_yn = 'Y'
+            </if>
+            <if test='besideAreaYn == "Y"'>
+                AND near_train  NOT IN ('사당','신림','서울대입구','합정','홍대입구','시청','동대문','성수','건대','잠실','강남')
+            </if>
+        </where>
+        <trim prefix='ORDER BY' suffixOverrides=",">
+        	<if test='goodsAmtYn == "Y"'>  goods_amt DESC,</if>
+        	<if test='useAmountRowYn == "Y"'>  use_amount ASC,</if>                                           
+        	<if test='useAmountHightYn == "Y"'>  use_amount DESC,</if>                                           
+        	<if test='createDtmYn == "Y"'>  create_dtm DESC,</if>                                           
+        </trim>
+ 	</select>
+    <select id="selectProductList" resultType="com.locaplace.api.host.product.dto.ProductDto">
+    	select
+    		 product_nid
+			,host_nid
+			,product_name
+			,use_amount
+			,deposit
+			,product_comment
+			,how_to_use
+			,latitude
+			,longitude
+			,sido
+			,sigungu
+			,address
+			,address_detail
+			,near_train
+			,max_guest_number
+			,product_status
+			,exclusive_area
+			,exclusive_area_unit
+			,number_floors
+			,floor_type
+			,parking_yn
+			,elevator_yn
+			,animals_yn
+			,room_qty
+			,washroom_qty
+			,living_room_qty
+			,kitchen_qty
+			,room_type
+			,multiple_layer
+			,living_room_type
+			,kitchen_type
+			,washroom_type
+			,img_file_nid
+			,wanted_guest_level
+			,create_dtm
+			,update_dtm
+    	from product
+    	where host_nid = #{hostNid}
+ 	</select>
+ 	<select id="selectProduct" resultType="com.locaplace.api.host.product.dto.ProductDto">
+    	select
+    		 product_nid
+			,host_nid
+			,product_name
+			,use_amount
+			,deposit
+			,product_comment
+			,how_to_use
+			,latitude
+			,longitude
+			,sido
+			,sigungu
+			,address
+			,address_detail
+			,near_train
+			,max_guest_number
+			,product_status
+			,exclusive_area
+			,exclusive_area_unit
+			,number_floors
+			,floor_type
+			,parking_yn
+			,elevator_yn
+			,animals_yn
+			,room_qty
+			,washroom_qty
+			,living_room_qty
+			,kitchen_qty
+			,room_type
+			,multiple_layer
+			,living_room_type
+			,kitchen_type
+			,washroom_type
+			,img_file_nid
+			,wanted_guest_level
+			,create_dtm
+			,update_dtm
+    	from product
+    	where product_nid = #{productNid}
+ 	</select>
+ 	<insert id="insertProduct">
+ 		insert into product(
+			 host_nid
+			,product_name
+			,use_amount
+			,deposit
+			,product_comment
+			,how_to_use
+			,latitude
+			,longitude
+			,sido
+			,sigungu
+			,address
+			,address_detail
+			,near_train
+			,max_guest_number
+			,product_status
+			,exclusive_area
+			,exclusive_area_unit
+			,number_floors
+			,floor_type
+			,parking_yn
+			,elevator_yn
+			,animals_yn
+			,room_qty
+			,washroom_qty
+			,living_room_qty
+			,kitchen_qty
+			,room_type
+			,multiple_layer
+			,living_room_type
+			,kitchen_type
+			,washroom_type
+			,img_file_nid
+			,wanted_guest_level
+ 		)values(
+			,#{hostNid}
+			,#{productName}
+			,#{useAmount}
+			,#{deposit}
+			,#{productComment}
+			,#{howToUse}
+			,#{latitude}
+			,#{longitude}
+			,#{sido}
+			,#{sigungu}
+			,#{address}
+			,#{addressDetail}
+			,#{nearTrain}
+			,#{maxGuestNumber}
+			,#{productStatus}
+			,#{exclusiveArea}
+			,#{exclusiveAreaUnit}
+			,#{numberFloors}
+			,#{floorType}
+			,#{parkingYn}
+			,#{elevatorYn}
+			,#{animalsYn}
+			,#{roomQty}
+			,#{washroomQty}
+			,#{livingRoomQty}
+			,#{kitchenQty}
+			,#{roomType}
+			,#{multipleLayer}
+			,#{livingRoomType}
+			,#{kitchenType}
+			,#{washroomType}
+			,#{imgFileNid}
+			,#{wantedGuestLevel}
+ 		)
+ 		<selectKey resultType="int" keyProperty="productNid" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+ 	</insert>
+ 	<update id="updateProduct">
+ 		update product set
+			 product_name = #{productName}
+			,use_amount = #{useAmount}
+			,deposit = #{deposit}
+			,product_comment = #{productComment}
+			,how_to_use = #{howToUse}
+			,latitude = #{latitude}
+			,longitude = #{longitude}
+			,sido = #{sido}
+			,sigungu = #{sigungu}
+			,address = #{address}
+			,address_detail = #{addressDetail}
+			,near_train = #{nearTrain}
+			,max_guest_number = #{maxGuestNumber}
+			,product_status = #{productStatus}
+			,exclusive_area = #{exclusiveArea}
+			,exclusive_area_unit = #{exclusiveAreaUnit}
+			,number_floors = #{numberFloors}
+			,floor_type = #{floorType}
+			,parking_yn = #{parkingYn}
+			,elevator_yn = #{elevatorYn}
+			,animals_yn = #{animalsYn}
+			,room_qty = #{roomQty}
+			,washroom_qty = #{washroomQty}
+			,living_room_qty = #{livingRoomQty}
+			,kitchen_qty = #{kitchenQty}
+			,room_type = #{roomType}
+			,multiple_layer = #{multipleLayer}
+			,living_room_type = #{livingRoomType}
+			,kitchen_type = #{kitchenType}
+			,washroom_type = #{washroomType}
+			,img_file_nid = #{imgFileNid}
+			,wanted_guest_level = #{wantedGuestLevel}
+			,update_dtm = now()
+ 		where product_nid = #{productNid}
+ 	</update>
+ 	<delete id="deleteProduct">
+ 		DELETE FROM  product
+ 		WHERE product_nid=#{productNid}
+ 	</delete>
+
+	<select id="selectProductOptionInfoList">
+		SELECT
+			product_nid, classification_code, common_code_nid
+		FROM product_option_info
+		WHERE product_nid=#{productNid}
+	</select>
+ 	<insert id="insertProductOptionInfo">
+ 	INSERT INTO product_option_info
+	(product_nid, classification_code, common_code_nid)
+	VALUES(
+		#{productNid},
+		#{classificationCode},
+		#{commonCodeNid}
+		)
+ 	</insert>
+ 	<delete id="deleteProductOptionInfo">
+ 	DELETE FROM product_option_info WHERE product_nid = #{productNid}
+ 	</delete>
+
+	<select id="selectUnusedDateList">
+		SELECT
+			review_nid
+			,user_nid
+			,product_nid
+			,reservation_nid
+			,review_content
+			,review_score
+			,create_dtm
+		FROM unused_date
+		WHERE product_nid=#{productNid}
+	</select>
+ 	<insert id="insertUnusedDate">
+ 	INSERT INTO unused_date
+	(
+		 product_nid
+		,unused_start_dt
+		,unused_end_dt
+	)
+	VALUES(
+		#{productNid}
+		,#{unusedStartDt}
+		,#{unusedEndDt}
+	)
+ 	</insert>
+	<delete id="deleteUnusedDate">
+ 		DELETE FROM unused_date WHERE product_nid = #{productNid}
+ 	</delete>
+
+ 	<select id="selectProductReviewList">
+		SELECT
+			review_nid
+			,user_nid
+			,product_nid
+			,reservation_nid
+			,review_content
+			,review_score
+			,create_dtm
+		FROM review
+		WHERE product_nid=#{productNid}
+	</select>
+
+ 	<select id="selectFileMngList">
+		SELECT
+			file_group_nid, file_path, main_yn,org_name,convert_name
+		FROM file_mng
+		WHERE product_nid=#{productNid}
+	</select>
+ 	<insert id="insertFileMng">
+ 	INSERT INTO file_mng
+	(file_group_nid, file_path, main_yn,org_name,convert_name)
+	VALUES(
+	#{fileGroupNid}, #{filePath}, #{mainYn},#{orgName},#{convertName}
+	)
+ 	</insert>
+ 	<delete id="deleteFileMng">
+ 		DELETE FROM file_mng WHERE file_mng_nid = #{fileMngNid}
+ 	</delete>
+
+</mapper>

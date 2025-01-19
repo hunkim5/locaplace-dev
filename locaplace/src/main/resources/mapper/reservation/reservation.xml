@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.locaplace.api.guest.reservation.mapper.ReservationMapper">
+    <select id="selectReservationList" resultType="com.locaplace.api.guest.reservation.dto.ReservationDto">
+    	SELECT
+			reservation_nid
+			,product_nid
+			,host_nid
+			,user_nid
+			,contract_start_dtm
+			,contract_end_dtm
+			,guest_count
+			,contract_type
+			,contract_status
+			,rev_req_dtm
+			,rev_cancel_dtm
+			,approved
+			,approval_cancel_dtm
+			,payment_dtm
+			,payment_fail_dtm
+			,payment_amt
+			,payback_amt
+			,payment_type
+			,bank_name
+			,account_no
+			,account_owner
+			,ext_contract_yn
+			,deposit_return_yn
+			,create_dtm
+			,update_dtm
+    	FROM reservation
+ 	</select>
+ 	<select id="selectReservation" resultType="com.locaplace.api.guest.reservation.dto.ReservationDto">
+    	SELECT
+			reservation_nid
+			,product_nid
+			,host_nid
+			,user_nid
+			,contract_start_dtm
+			,contract_end_dtm
+			,guest_count
+			,contract_type
+			,contract_status
+			,rev_req_dtm
+			,rev_cancel_dtm
+			,approved
+			,approval_cancel_dtm
+			,payment_fail_dtm
+			,payment_amt
+			,payback_amt
+			,payment_type
+			,bank_name
+			,account_no
+			,account_owner
+			,ext_contract_yn
+			,deposit_return_yn
+			,create_dtm
+			,update_dtm
+    	FROM reservation
+    	WHERE reservation_nid = #{reservationNid}
+ 	</select>
+ 	<insert id="insertReservation">
+ 		INSERT INTO reservation(
+			 product_nid
+			,product_name
+			,host_nid
+			,user_nid
+			,contract_start_dtm
+			,contract_end_dtm
+			,guest_count
+			,contract_status
+			,use_amount
+			,deposit
+			,guest_fee
+			,fee
+			,payment_amt
+ 		)VALUES(
+			 #{productNid}
+			,#{productName}
+			,#{hostNid}
+			,#{userNid}
+			,#{contractStartDtm}
+			,#{contractEndDtm}
+			,#{guestCount}
+			,0
+			,#{useAmount}
+			,#{deposit}
+			,#{guestFee}
+			,#{fee}
+			,#{paymentAmt}
+ 		)
+ 		<selectKey resultType="int" keyProperty="reservationNid" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+ 	</insert>
+ 	<update id="updateReservation">
+ 		UPDATE reservation SET
+			 contract_start_dtm = #{contractStartDtm}
+			,contract_end_dtm = #{contractEndDtm}
+			,guest_count = #{guestCount}
+			,contract_type = #{contractType}
+			,contract_status = #{contractStatus}
+			,rev_req_dtm = #{revReqDtm}
+			,approved = #{approved}
+			,approval_cancel_dtm = #{approvalCancelDtm}
+			,payment_amt = #{paymentAmt}
+			,payback_amt = #{paybackAmt}
+			,payment_type = #{paymentType}
+			,bank_name = #{bankName}
+			,account_no = #{accountNo}
+			,account_owner = #{accountOwner}
+			,ext_contract_yn = #{extContractYn}
+			,deposit_return_yn = #{depositReturnYn}
+			,update_dtm = now()
+ 		WHERE reservation_nid = #{reservationNid}
+ 	</update>
+ 	<delete id="deleteReservation">
+ 		DELETE FROM reservation WHERE reservation_nid = #{reservationNid}
+ 	</delete>
+ 	<select id="userProductAuthCheck" resultType="int">
+ 		SELECT count(1) cnt
+ 		FROM product
+ 		WHERE wanted_guest_level = #{kycLevel}
+ 		  AND product_nid = #{productNid}
+ 	</select>
+ 	<select id="selectReservaionView" resultType="com.locaplace.api.guest.reservation.dto.ReservaionViewDto">
+	SELECT
+		product_nid
+		,product_name
+		,use_amount
+		,deposit
+		,guest_fee
+		,fee
+		,(use_amount + deposit + fee) as payment_amt
+	FROM (
+		SELECT
+			product_nid
+			,product_name
+			,use_amount
+			,deposit
+			,guest_fee
+			,ROUND(((use_amount * guest_fee) / 100),0) as fee
+		FROM (
+	    	SELECT
+	    		 product_nid
+	    		,product_name
+				,use_amount
+				,deposit
+				,(SELECT etc_val1 FROM common_code WHERE classification_code='fee' AND code='guest_fee') as guest_fee
+	    	FROM product
+	    	WHERE product_nid = #{productNid}
+	    ) A
+	 ) B
+ 	</select>
+ 	<select id="selectReservationAlarm" resultType="com.locaplace.api.guest.reservation.dto.ReservationAlarmDto">
+		SELECT
+			 A.reservation_nid
+			,A.product_nid
+			,A.host_nid
+			,A.user_nid
+			,A.contract_status
+			,(SELECT code_name FROM common_code WHERE classification_code='contract_status' AND code=A.contract_status)contract_status_nm
+			,A.product_name
+			,CASE
+				WHEN contract_status = 0 THEN DATE_FORMAT(A.rev_req_dtm, '%Y-%m-%d')
+				WHEN contract_status = 1 THEN DATE_FORMAT(A.rev_cancel_dtm, '%Y-%m-%d')
+				WHEN contract_status = 2 THEN DATE_FORMAT(A.approved_dtm, '%Y-%m-%d')
+				WHEN contract_status = 3 THEN DATE_FORMAT(A.approval_cancel_dtm, '%Y-%m-%d')
+				WHEN contract_status = 4 THEN DATE_FORMAT(A.payment_dtm, '%Y-%m-%d')
+				WHEN contract_status = 5 THEN DATE_FORMAT(A.payment_fail_dtm, '%Y-%m-%d')
+				WHEN contract_status = 8 THEN DATE_FORMAT(A.contract_end_dtm, '%Y-%m-%d')
+			 END status_dt
+		FROM reservation A
+		WHERE A.user_nid = #{userNid}
+ 	</select>
+</mapper>
