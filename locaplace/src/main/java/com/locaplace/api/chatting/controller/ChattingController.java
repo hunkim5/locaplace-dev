@@ -17,6 +17,7 @@ import com.locaplace.api.chatting.dto.ChattingSearchDto;
 import com.locaplace.api.chatting.service.ChattingService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,31 +30,33 @@ import lombok.extern.slf4j.Slf4j;
 public class ChattingController {
 
 	private final ChattingService chattingService;
-
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "채팅룸 리스트")
 	@GetMapping("")
     public ResponseEntity<List<ChattingRoomDto>> selectChattingRoomList(@RequestBody ChattingSearchDto dto) {
 		List<ChattingRoomDto> list =chattingService.selectChattingRoomList(dto);
         return ResponseEntity.ok(list);
     }
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "채팅룸 상세")
 	@GetMapping("/{chattingRoomNid}")
 	public ResponseEntity<ChattingRoomDto> selectChattingRoomList(@PathVariable("chattingRoomNid") int chattingRoomNid) {
 		ChattingRoomDto data =chattingService.selectChattingRoom(chattingRoomNid);
 		return ResponseEntity.ok(data);
 	}
-
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "채팅룸 등록(채팅룸 일련번호 리턴)")
 	@PostMapping("/room")
     public ResponseEntity<Integer> insertChattingRoom(@RequestBody ChattingRoomDto dto) {
         return ResponseEntity.ok(chattingService.insertChattingRoom(dto));
     }
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "채팅 등록")
 	@PostMapping("")
 	public ResponseEntity<Integer> insertChatting(@RequestBody ChattingDto dto) {
 		return ResponseEntity.ok(chattingService.insertChatting(dto));
 	}
-
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "채팅룸 삭제")
 	@DeleteMapping("/room/{chattingRoomNid}")
 	public ResponseEntity<Integer> deleteChattingRoom(@PathVariable("chattingRoomNid") int chattingRoomNid) {

@@ -39,22 +39,26 @@ public class ProductController {
 		List<ProductDto> list =productService.selectProductList(dto);
         return ResponseEntity.ok(list);
     }
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "상품 상세")
 	@GetMapping("/{productNid}")
 	public ResponseEntity<ProductDto> selectProduct(@PathVariable("productNid") int productNid) {
 		ProductDto data =productService.selectProduct(productNid);
 		return ResponseEntity.ok(data);
 	}
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "상품 등록")
 	@PostMapping("")
     public ResponseEntity<Integer> insertProduct(@RequestBody ProductDto dto) {
         return ResponseEntity.ok(productService.insertProduct(dto));
     }
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "상품 수정")
 	@PutMapping("")
     public ResponseEntity<Integer> updateProduct(@RequestBody ProductDto dto) {
         return ResponseEntity.ok(productService.updateProduct(dto));
     }
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "상품 삭제")
 	@DeleteMapping("/{productNid}")
 	public ResponseEntity<Integer> deleteProduct(@PathVariable("productNid") int productNid) {
