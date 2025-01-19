@@ -115,9 +115,6 @@
 			,update_dtm = now()
  		WHERE reservation_nid = #{reservationNid}
  	</update>
- 	<delete id="deleteReservation">
- 		DELETE FROM reservation WHERE reservation_nid = #{reservationNid}
- 	</delete>
  	<select id="userProductAuthCheck" resultType="int">
  		SELECT count(1) cnt
  		FROM product
@@ -174,4 +171,90 @@
 		FROM reservation A
 		WHERE A.user_nid = #{userNid}
  	</select>
+ 	<update id="updateReservationCancel">
+		UPDATE reservation SET
+			contract_status= 1
+			,payback_amt= #{paybackAmt}
+		WHERE reservation_nid = #{reservationNid}
+ 	</update>
+ 	<select id="selectUserCardList" resultType="com.locaplace.api.guest.reservation.dto.UserCardDto">
+ 		SELECT
+	 		user_card_nid
+			,user_nid
+			,card_code
+			,card_gubun
+			,birthday
+			,business_number
+			,card_number
+			,validit
+			,card_password
+			,main_yn
+		FROM user_card
+		WHERE user_nid = #{userNid}
+ 	</select>
+ 	<select id="selectUserCard" resultType="com.locaplace.api.guest.reservation.dto.UserCardDto">
+ 		SELECT
+	 		user_card_nid
+			,user_nid
+			,card_code
+			,card_gubun
+			,birthday
+			,business_number
+			,card_number
+			,validit
+			,card_password
+			,main_yn
+		FROM user_card
+		WHERE user_card_nid = #{userCardNid}
+ 	</select>
+ 	<delete id="deleteUserCard">
+ 		DELETE FROM user_card WHERE user_card_nid = #{userCardNid}
+ 	</delete>
+ 	<insert id="insertUserCard">
+		INSERT INTO user_card(
+			user_card_nid
+			,user_nid
+			,card_code
+			,card_gubun
+			,birthday
+			,business_number
+			,card_number
+			,validit
+			,card_password
+		)VALUES(
+			 #{userCardNid}
+			,#{userNid}
+			,#{cardCode}
+			,#{cardGubun}
+			,#{birthday}
+			,#{businessNumber}
+			,#{cardNumber}
+			,#{validit}
+			,#{cardPassword}
+		)
+ 	</insert>
+ 	<update id="updateUserCard">
+ 		UPDATE user_card SET
+			 card_code = #{cardCode}
+			,card_gubun = #{cardGubun}
+			,birthday = #{birthday}
+			,business_number = #{businessNumber}
+			,card_number = #{cardNumber}
+			,validit = #{validit}
+			,card_password = #{cardPassword}
+ 		WHERE user_card_nid=#{userCardNid}
+ 	</update>
+ 	<update id="updateReservationPayment">
+		UPDATE reservation SET
+			payment_type= #{paymentType}
+			,bank_name= #{bankName}
+			,account_no= #{accountNo}
+			,account_owner= #{accountOwner}
+		WHERE reservation_nid = #{reservationNid}
+ 	</update>
+ 	<update id="updatePaybackAccountCertify">
+		UPDATE reservation SET
+			payback_account_certify_yn= #{paybackAccountCertifyYn}
+		WHERE reservation_nid = #{reservationNid}
+ 	</update>
 </mapper>

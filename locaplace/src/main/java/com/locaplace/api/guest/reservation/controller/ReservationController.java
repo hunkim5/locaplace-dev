@@ -16,6 +16,7 @@ import com.locaplace.api.guest.reservation.dto.ReservaionViewDto;
 import com.locaplace.api.guest.reservation.dto.ReservationAlarmDto;
 import com.locaplace.api.guest.reservation.dto.ReservationDto;
 import com.locaplace.api.guest.reservation.dto.ReservationRegDto;
+import com.locaplace.api.guest.reservation.dto.UserCardDto;
 import com.locaplace.api.guest.reservation.service.ReservationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,12 @@ public class ReservationController {
 		List<ReservationDto> list =reservationService.selectReservationList(dto);
         return ResponseEntity.ok(list);
     }
+	@Operation(summary = "예약 상세")
+	@GetMapping("/{reservationNid}")
+	public ResponseEntity<ReservationDto> selectReservation(@PathVariable("reservationNid") int reservationNid) {
+		ReservationDto data =reservationService.selectReservation(reservationNid);
+		return ResponseEntity.ok(data);
+	}
 	@Operation(summary = "예약하기 화면")
 	@GetMapping("/reservaion-view/{productNid}")
 	public ResponseEntity<ReservaionViewDto> selectReservaionView(@PathVariable("productNid") int productNid) {
@@ -59,11 +66,6 @@ public class ReservationController {
     public ResponseEntity<Integer> updateReservation(@RequestBody ReservationRegDto dto) {
         return ResponseEntity.ok(reservationService.updateReservation(dto));
     }
-	@Operation(summary = "예약 삭제")
-	@DeleteMapping("/{reservationNid}")
-	public ResponseEntity<Integer> deleteReservation(@PathVariable("reservationNid") int reservationNid) {
-		return ResponseEntity.ok(reservationService.deleteReservation(reservationNid));
-	}
 
 	@Operation(summary = "예약 알림 리스트")
 	@GetMapping("/reservation-alarm/{userNid}")
@@ -71,4 +73,28 @@ public class ReservationController {
 		List<ReservationAlarmDto> list =reservationService.selectReservationAlarmList(userNid);
         return ResponseEntity.ok(list);
     }
+
+	@Operation(summary = "예약 결제하기 화면")
+	@GetMapping("/rev-payment-view/{reservationNid}")
+	public ResponseEntity<ReservationDto> selectReservationPaymentView(@PathVariable("reservationNid") int reservationNid) {
+		ReservationDto data =reservationService.selectReservation(reservationNid);
+		return ResponseEntity.ok(data);
+	}
+
+	@Operation(summary = "등록카드 관리")
+	@GetMapping("/user-card/{userNid}")
+    public ResponseEntity<List<UserCardDto>> selectUserCardList(@PathVariable("userNid") int userNid) {
+		List<UserCardDto> list =reservationService.selectUserCardList(userNid);
+        return ResponseEntity.ok(list);
+    }
+	@Operation(summary = "카드 추가하기")
+	@PostMapping("/user-card")
+	public ResponseEntity<Integer> insertUserCard(@RequestBody UserCardDto dto) {
+		return ResponseEntity.ok(reservationService.insertUserCard(dto));
+	}
+	@Operation(summary = "카드 삭제")
+	@DeleteMapping("/user-card/{userCardNid}")
+	public ResponseEntity<Integer> deleteUserCard(@PathVariable("userCardNid") int userCardNid) {
+		return ResponseEntity.ok(reservationService.deleteUserCard(userCardNid));
+	}
 }

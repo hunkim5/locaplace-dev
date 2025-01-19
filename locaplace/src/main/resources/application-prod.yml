@@ -25,7 +25,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 locaplace:
-  endpoint: http://192.168.109.239:8080
+  endpoint: https://api.locaplace.co.kr
 
 jwt:
   secret: 7f8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9v0w1x2y3z4a5b6c7d8e9f0

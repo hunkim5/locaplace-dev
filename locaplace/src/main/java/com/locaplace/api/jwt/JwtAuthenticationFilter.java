@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws IOException {
         try {
             String token = extractTokenFromRequest(request);
-            log.info(">>>>token:{}",token);
+            log.debug(">>>>token:{}",token);
             if (token != null) {
                 log.debug("JWT token found in request: {}", token);
                 Optional<JwtToken> jwtTokenOpt = jwtTokenService.findByToken(token);
@@ -73,7 +73,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
             } else {
-                log.debug("No token found in request");
+                log.debug("No token found in request1");
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {

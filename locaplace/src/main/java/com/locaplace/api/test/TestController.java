@@ -20,6 +20,7 @@ import com.locaplace.api.test.mapper.TestMapper;
 import com.locaplace.api.test.service.TestService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class TestController {
 	private final TestService testService;
 	private final TestMapper map;
 
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "select Test",description = "test desc")
 	@GetMapping("/test2")
     public ResponseEntity<List<TestSelectDto>> selectTestList2() {

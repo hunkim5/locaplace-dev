@@ -18,6 +18,7 @@ import com.locaplace.api.host.product.dto.ProductSearchDto;
 import com.locaplace.api.host.product.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class ProductController {
 
 	private final ProductService productService;
 
+	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "상품 조회")
 	@GetMapping("")
     public ResponseEntity<List<ProductDto>> selectProductList(@ParameterObject ProductSearchDto dto) {

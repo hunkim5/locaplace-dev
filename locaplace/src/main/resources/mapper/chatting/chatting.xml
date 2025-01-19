@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.locaplace.api.chatting.mapper.ChattingMapper">
+    <select id="selectChattingRoomList" resultType="com.locaplace.api.chatting.dto.ChattingRoomDto">
+    	SELECT
+			 cr.chatting_room_nid
+			,cr.user_nid
+			,cr.join_user_nid
+			,cr.source_nid
+			,cr.room_type
+			,cr.room_title
+			,cr.create_dtm
+			,r.contract_status
+    	FROM chatting_room cr
+    	LEFT JOIN reservation r ON (cr.room_type='REV' AND cr.source_nid = r.reservation_nid)
+    	WHERE (user_nid = #{userNid} or join_user_nid = #{joinUserNid})
+    	ORDER BY create_dtm ASC
+ 	</select>
+    <select id="selectChattingList" resultType="com.locaplace.api.chatting.dto.ChattingDto">
+    	SELECT
+			 chatting_nid
+			,chatting_room_nid
+			,user_nid
+			,message
+			,chatting_dtm
+    	FROM chatting
+    	WHERE chatting_room_nid = #{chattingRoomNid}
+    	ORDER BY chatting_dtm ASC
+ 	</select>
+ 	<select id="selectChattingRoom" resultType="com.locaplace.api.chatting.dto.ChattingRoomDto">
+    	SELECT
+			 cr.chatting_room_nid
+			,cr.user_nid
+			,cr.join_user_nid
+			,cr.source_nid
+			,cr.room_type
+			,cr.room_title
+			,cr.create_dtm
+			,r.contract_status
+    	FROM chatting_room cr
+    	LEFT JOIN reservation r ON (cr.room_type='REV' AND cr.source_nid = r.reservation_nid)
+    	WHERE chatting_room_nid = #{chattingRoomNid}
+ 	</select>
+
+ 	<insert id="insertChattingRoom">
+ 		INSERT INTO chatting_room(
+			 user_nid
+			,join_user_nid
+			,source_nid
+			,room_type
+			,room_title
+ 		)VALUES(
+			 #{userNid}
+			,#{joinUserNid}
+			,#{sourceNid}
+			,#{roomType}
+			,#{roomTitle}
+ 		)
+ 		<selectKey resultType="int" keyProperty="chattingRoomNid" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+ 	</insert>
+ 	<insert id="insertChatting">
+ 		INSERT INTO chatting(
+			 chatting_room_nid
+			,user_nid
+			,message
+ 		)VALUES(
+			 #{chattingRoomNid}
+			,#{userNid}
+			,#{message}
+ 		)
+ 	</insert>
+
+ 	<delete id="deleteChattingRoom">
+		DELETE FROM chatting_room WHERE chatting_room_nid = #{chattingRoomNid}
+ 	</delete>
+ 	<delete id="deleteChatting">
+		DELETE FROM chatting WHERE chatting_room_nid = #{chattingRoomNid}
+ 	</delete>
+</mapper>

@@ -86,9 +86,9 @@ public class UserService {
     public LocaResponse<String> login(UserLoginVo vo) {
         User user = userRepository.findByEmail(vo.getEmail())
                 .orElseThrow(() -> new LocaException(ErrorCode.USER_NOT_FOUND));
-//        if (!passwordEncoder.matches(vo.getPassword(), user.getPassword())) {
-//            throw new LocaException(ErrorCode.INVALID_PASSWORD);
-//        }
+        if (!passwordEncoder.matches(vo.getPassword(), user.getPassword())) {
+            throw new LocaException(ErrorCode.INVALID_PASSWORD);
+        }
         String token = jwtTokenService.generateToken(user);
         LocalDateTime expireDtm = LocalDateTime.now().plusSeconds(JwtTokenService.EXPIRATION_TIME);
         jwtTokenService.createToken(user, token, expireDtm);
