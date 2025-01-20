@@ -37,7 +37,7 @@ public class TestController {
 
 	@SecurityRequirement(name = "bearer-token")
 	@Operation(summary = "select Test",description = "test desc")
-	@GetMapping("/test2")
+	@GetMapping("/test23")
     public ResponseEntity<List<TestSelectDto>> selectTestList2() {
 		List<TestSelectDto> list =map.selectTestList2();
 		log.debug(">>>>list:{}",list.toString());
